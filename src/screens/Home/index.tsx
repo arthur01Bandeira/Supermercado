@@ -1,35 +1,43 @@
-import { Alert, FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { AntDesign } from '@expo/vector-icons';
-//import { Product } from "../../components/Product";
-import { styles } from "./styles"
+import { Text, TouchableOpacity, View, Image } from "react-native";
+import { styles } from "../Home/styles";
 
-export default function HomeScreen() {
+type Props = {
+  name: string;
+  isFinished: boolean;
+  onRemove: () => void;
+  onToggleFinish: () => void;
+};
+
+export function Product({ name, isFinished, onRemove, onToggleFinish }: Props) {
   return (
     <View style={styles.container}>
-      <View style={styles.top}>
-        <Text style={styles.Title}>Lista de Compras</Text>
-      </View>
-      
-      <View style={styles.bottom}>
-        <View>
+      {/* Toggle Finish */}
+      <TouchableOpacity onPress={onToggleFinish} style={styles.circleWrapper}>
+        {isFinished ? (
+          <Image
+            source={require("../../assets/check.png")} 
+             style={{ width: 20, height: 20, tintColor: "#7A4A9E" }}
+          />
+        ) : (
+          <View style={styles.circle} />
+        )}
+      </TouchableOpacity>
 
-        </View>
-      </View>
-      <View style={styles.emptyListView}>
+      {/* Product Name */}
+      <Text style={isFinished ? styles.nameFinished : styles.name}>
+        {name}
+      </Text>
 
-      </View>
-      <View style={styles.inputwrapper}>
-        <TextInput
-                
-            style={styles.input}
-            placeholder="Adicione um novo produto"
-            placeholderTextColor={"#808080"}
-            //value={newProduct}
-            //onChangeText={setNewProduct}
-        />
-      </View>
-
+      {/* Delete Button */}
+      <TouchableOpacity
+        onPress={onRemove}
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+      >
+        <Image
+  source={require("../../assets/trash.png")} // ícone da lixeira
+  style={{ width: 20, height: 20, tintColor: "#000" }}
+/>
+      </TouchableOpacity>
     </View>
   );
 }
-
