@@ -1,43 +1,103 @@
-import { Text, TouchableOpacity, View, Image } from "react-native";
-import { styles } from "../Home/styles";
+import { useState } from "react";
+import { FlatList, Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { styles } from "./styles";
+import { Product } from "../../components/Product";
 
-type Props = {
-  name: string;
-  isFinished: boolean;
-  onRemove: () => void;
-  onToggleFinish: () => void;
-};
+export function Home() {
+  const [products, setProducts] = useState<string[]>([]);
+  const [finished, setFinished] = useState<string[]>([]);
+  const [newProduct, setNewProduct] = useState("");
 
-export function Product({ name, isFinished, onRemove, onToggleFinish }: Props) {
+  function handleAddProduct() {
+    if (newProduct.trim().length === 0) return;
+    setProducts((prev) => [...prev, newProduct]);
+    setNewProduct("");
+  }
+
+  function handleRemove(product: string, isFinished = false) {
+    if (isFinished) {
+      setFinished((prev) => prev.filter((item) => item !== product));
+    } else {
+      setProducts((prev) => prev.filter((item) => item !== product));
+    }
+  }
+
+  function handleToggleFinish(product: string) {
+    if (products.includes(product)) {
+      setProducts((prev) => prev.filter((item) => item !== product));
+      setFinished((prev) => [...prev, product]);
+    } else {
+      setFinished((prev) => prev.filter((item) => item !== product));
+      setProducts((prev) => [...prev, product]);
+    }
+  }
+
   return (
     <View style={styles.container}>
-      {/* Toggle Finish */}
-      <TouchableOpacity onPress={onToggleFinish} style={styles.circleWrapper}>
-        {isFinished ? (
+      {/* Top Header */}
+      <View style={styles.top}>
+        <Text style={styles.Title}>Lista de Compras</Text>
+      </View>
+
+      {/* Input + Add Button */}
+      <View style={styles.inputwrapper}>
+        <TextInput
+          style={styles.input}
+          placeholder="Adicione um novo produto"
+          placeholderTextColor="#808080"
+          value={newProduct}
+          onChangeText={setNewProduct}
+        />
+        <TouchableOpacity style={styles.addButton} onPress={handleAddProduct}>
           <Image
-            source={require("../../assets/check.png")} 
-             style={{ width: 20, height: 20, tintColor: "#7A4A9E" }}
+            source={require("../../../assets/plus.png")}
+            style={styles.addIcon}
           />
-        ) : (
-          <View style={styles.circle} />
-        )}
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
 
-      {/* Product Name */}
-      <Text style={isFinished ? styles.nameFinished : styles.name}>
-        {name}
-      </Text>
+      {/* Bottom List Section */}
+      <View style={styles.bottom}>
+        {/* Counters */}
+        <View style={styles.counters}>
+          <Text style={styles.produtos}>
+            Produtos <Text style={{ color: "#000" }}>{products.length}</Text>
+          </Text>
+          <Text style={styles.finalizados}>
+            Finalizados <Text style={{ color: "#000" }}>{finished.length}</Text>
+          </Text>
+        </View>
 
-      {/* Delete Button */}
-      <TouchableOpacity
-        onPress={onRemove}
-        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-      >
-        <Image
-  source={require("../../assets/trash.png")} // ícone da lixeira
-  style={{ width: 20, height: 20, tintColor: "#000" }}
-/>
-      </TouchableOpacity>
+        {/* Products List */}
+        <FlatList
+          data={[...products, ...finished]} 
+          keyExtractor={(item, index) => item + index}
+          renderItem={({ item }) => (
+            <Product
+              name={item}
+              isFinished={finished.includes(item)}
+              onRemove={() => handleRemove(item, finished.includes(item))}
+              onToggleFinish={() => handleToggleFinish(item)}
+            />
+          )}
+          ListEmptyComponent={() => (
+            <View style={styles.emptyListView}>
+              <Image
+                source={require("../../../assets/shopping_list.png")}
+                style={styles.emptyIcon}
+              />
+              <Text style={styles.emptyText}>Sua lista está vazia</Text>
+              <Text style={{ color: "#808080", fontSize: 12 }}>
+                Adicione produtos e organize suas compras
+              </Text>
+            </View>
+          )}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
     </View>
   );
 }
+
+export default Home; 
+
