@@ -32,7 +32,7 @@ export function Product({ name, isFinished, onRemove, onToggleFinish }: Props) {
       <TouchableOpacity onPress={onRemove}>
         <Image
           source={require("../../assets/trash.png")}
-          style={{ width: 20, height: 20, tintColor: "#000" }}
+          style={{ width: 32, height: 32,display: "flex", tintColor: "#000" }}
         />
       </TouchableOpacity>
     </View>

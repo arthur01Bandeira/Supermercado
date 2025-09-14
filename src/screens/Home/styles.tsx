@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
   },
 
   produtos: {
-    color: "green",
+    color: "#31C667",
     fontWeight: "bold",
     fontSize: 16,
   },
@@ -108,7 +108,7 @@ export const styles = StyleSheet.create({
   borderRadius: 8,
   padding: 12,
   marginBottom: 8,
-  borderWidth: 0.5,
+  borderWidth: 1,
   borderColor: "#ccc",
 },
 circleWrapper: {
@@ -119,7 +119,7 @@ circle: {
   height: 20,
   borderRadius: 10,
   borderWidth: 2,
-  borderColor: "green",
+  borderColor: "#31C667",
 },
 name: {
   flex: 1,
